@@ -2,6 +2,8 @@
 const profileOverview = document.querySelector(".overview");
 // Create a global variable called username. In the value add your Github username
 const username = "Harobulus";
+// Create a global variable to select the unordered list to display the repos list
+const repoList = document.querySelector(".repo-list");
 // Create an async function to fetch info from your Github profile
 const getGithubProfileInfo = async function () {
     const getData = await fetch(`https://api.github.com/users/${username}`);
@@ -24,6 +26,29 @@ const displayUserInfo = function (profileData) {
    <p><strong>Number of public repos:</strong> ${profileData.public_repos}</p>
  </div>`;
 profileOverview.append(displayDiv);
+fetchRepos();
+};
 
+// Create a new async function to fetch repos
+const fetchRepos = async function () {
+  const connectData = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+  const userRepo = await connectData.json();
+  console.log(userRepo);
+
+  displayRepoInfo(userRepo);
+};
+
+
+// Display Info About Your Repos
+const displayRepoInfo = function (userRepo) {
+  userRepo.forEach(function(item, index) {
+   let listItem = document.createElement("li");
+   listItem.classList.add("repo");
+  listItem.innerHTML = `<h3>${userRepo[index].name}</h3>`;
+
+ console.log(listItem);
+ repoList.append(listItem);
+
+  });
 };
 
