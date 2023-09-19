@@ -8,8 +8,10 @@ const repoList = document.querySelector(".repo-list");
 const allRepoInfo = document.querySelector(".repos");
 // Create a global variable that selects the section where individual repo data will appear
 const individualRepoData = document.querySelector(".repo-data");
-// Create an empty array of languages
-
+// Create a global variable to select the Back to Repo Gallery Button.
+const backToRepo = document.querySelector(".view-repos");
+// Create a global variable to select the input with the "Search by name" placeholder.
+const filterInput = document.querySelector(".filter-repos");
 // Create an async function to fetch info from your Github profile
 const getGithubProfileInfo = async function () {
     const getData = await fetch(`https://api.github.com/users/${username}`);
@@ -47,6 +49,7 @@ const fetchRepos = async function () {
 
 // Display Info About Your Repos
 const displayRepoInfo = function (userRepo) {
+  filterInput.classList.remove("hide");
   userRepo.forEach(function(item, index) {
    let listItem = document.createElement("li");
    listItem.classList.add("repo");
@@ -96,4 +99,33 @@ const displaySpecificRepoInfo = function (repoInfo, languages) {
   individualRepoData.append(specificInfoDiv);
   individualRepoData.classList.remove("hide");
   allRepoInfo.classList.add("hide");
+  backToRepo.classList.remove("hide");
 };
+
+// Add a Click Event to the Back Button
+backToRepo.addEventListener("click", function () {
+  allRepoInfo.classList.remove("hide");
+  individualRepoData.classList.add("hide");
+  backToRepo.classList.add("hide");
+});
+
+// Add an Input Event to the search box
+filterInput.addEventListener("input", function (e) {
+  const inputValue = e.target.value;
+  // console.log(inputValue);
+  const repos = document.querySelectorAll(".repo");
+  // console.log(repos);
+  const lowerInputValue = inputValue.toLowerCase();
+// console.log(lowerInputValue);
+for (const repo of repos) {
+  let repoInnerText = repo.innerText;
+  // console.log(repoInnerText);
+  const lowerRepoInnerText = repoInnerText.toLowerCase();
+  // console.log(lowerRepoInnerText);
+  if (lowerRepoInnerText.includes(lowerInputValue) ) {
+    repo.classList.remove("hide");
+  }else {
+    repo.classList.add("hide");
+  }
+};
+});
